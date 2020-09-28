@@ -1,5 +1,6 @@
 var recipes = [];
 var selectedRecipe = null;
+var self = this;
 
 function main() {
     var self = this;
@@ -10,7 +11,16 @@ function main() {
 }
 
 function hashChange() {
+    resetRecipe();
     loadRecipe(location.hash);
+}
+
+function resetRecipe() {
+    $('#title').html('');
+    $('#ingredients').html('');
+    $('#instructions').html('');
+    $('#search').val('');
+    $('#search-results').html('');
 }
 
 function loadRecipe(id) {
@@ -26,6 +36,13 @@ function loadRecipe(id) {
     });
 
 }
+
+$('#search').keyup(function() {
+    $('#search-results').html('');
+    var value = $('#search').val().toLowerCase();
+    var recipes = self.recipes.filter(recipe => recipe.title.toLowerCase().indexOf(value) >= 0);
+    recipes.forEach(recipe => $('#search-results').append('<li><a href=' + recipe.id + '>' + recipe.title + '</a></li>'));
+});
 
 window.onhashchange = hashChange;
 
