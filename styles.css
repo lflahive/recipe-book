@@ -11,13 +11,14 @@ h1 {
 .nav {
     width: 100%;
     background-color: #2bae66ff;
-    height: 60px;
     display: flex;
+    flex-wrap: wrap;
+    padding-bottom: .5em;
     align-items: center;
 }
 
 .nav-item {
-    flex: 1;
+    flex: 1 0 auto;
     margin: 0 15px;
 }
 
@@ -58,10 +59,11 @@ h1 {
     border: 1px solid black;
     min-height: 300px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    flex: 1 0 calc(30% - 10px);
+    flex: 1 1 300px;
     margin: 10px;
+    padding: 10px;
     text-decoration: none;
     color: #000;
 }
