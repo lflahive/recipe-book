@@ -66,8 +66,5 @@ h1 {
 .home-recipe > a {
     flex: 1;
     text-decoration: none;
-}
-
-.home-recipe > a {
     color: #000;
 }
