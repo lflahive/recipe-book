@@ -1,7 +1,11 @@
 body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
-    background-color: #fcf6f5ff;;
+    background-color: #fcf6f5ff;
+}
+
+a {
+    text-decoration: none
 }
 
 h1 {
@@ -47,4 +51,13 @@ h1 {
 
 .recipe {
     padding-left: 15px;
+}
+
+
+.home {
+    padding-top: 1em;
+}
+
+.home .recipe-list {
+    padding: .25em;
 }
