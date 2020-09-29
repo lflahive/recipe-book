@@ -2,15 +2,27 @@ var recipes = [];
 var self = this;
 
 function main() {
+    $('.home').hide();
+    $('.recipe').hide();
     $.getJSON('./index.json', function(recipes) {
         self.recipes = recipes;
-        loadRecipe(location.hash);
+        loadPage();
     });
 }
 
 function hashChange() {
     resetRecipe();
-    loadRecipe(location.hash);
+    loadPage();
+}
+
+function loadPage() {
+    $('.home').hide();
+    $('.recipe').hide();
+    var hash = location.hash;
+    if(hash == '' || hash == '#')
+        loadHome();
+    else
+        loadRecipe(location.hash);
 }
 
 function resetRecipe() {
@@ -22,7 +34,6 @@ function resetRecipe() {
 }
 
 function loadRecipe(id) {
-    console.log(id);
     var recipe = self.recipes.filter(recipe => recipe.id == id)[0];
 
     $.getJSON('./recipes/' + recipe.file, function(recipe) {
@@ -33,16 +44,33 @@ function loadRecipe(id) {
         recipe.instructions.forEach(instruction => {
             $('#instructions').append('<li>' + instruction + '</li>');
         });
+
+        $('.recipe').show();
     });
 }
 
-$('#search').keyup(function() {
-    $('#search-results').html('');
-    var value = $('#search').val().toLowerCase();
-    var recipes = self.recipes.filter(recipe => recipe.title.toLowerCase().indexOf(value) >= 0);
-    recipes.forEach(recipe => $('#search-results').append('<li><a href=' + recipe.id + '>' + recipe.title + '</a></li>'));
-});
+function loadHome() {
+    $('.home').html('');
+    self.recipes.forEach(recipe => $('.home').append('<div><a href='+recipe.id+'>'+recipe.title+'</a></div>'));
+    $('.home').show();
+}
 
 window.onhashchange = hashChange;
+
+new autoComplete({
+    selector: 'input[id="search"]',
+    minChars: 2,
+    source: function(term, suggest){
+        term = term.toLowerCase();
+        var recipes = self.recipes.filter(recipe => recipe.title.toLowerCase().indexOf(term) >= 0);
+        suggest(recipes);
+    },
+    renderItem: function (item, search){
+        return '<div class="autocomplete-suggestion" data-href="' + item.id + '">' + item.title + '</div>';
+    },
+    onSelect: function(e, term, item){
+        location.hash = item.getAttribute('data-href');
+    }
+});
 
 main();

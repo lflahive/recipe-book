@@ -1,6 +1,7 @@
 body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
+    background-color: #fcf6f5ff;;
 }
 
 h1 {
@@ -20,14 +21,28 @@ h1 {
     margin: 0 15px;
 }
 
-.nav-title {
+.nav-title, .nav-title > a {
     color: #fcf6f5ff;
+    text-decoration: none;
 }
 
 .nav-search {
     width: 100%;
     line-height: 30px;
     font-size: 24px;
+}
+
+.nav-search-results {
+    z-index: 1000;
+    display: none;
+    width: 100%;
+    margin-top: -2px;
+}
+
+.nav-search-results > li {
+    width: 100%;
+    padding: 20px 15px;
+    list-style-type: none;
 }
 
 .recipe {
