@@ -1,0 +1,42 @@
+name: Package Website
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+    PACKAGE_PREFIX: 2020.1.1
+    OCTOPUS_PROJECT_NAME: Cook Book
+    OCTOPUS_SPACE_NAME: Default
+    OCTOPUS_ENVIRONMENT_NAME: Development
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Set version
+      id: set-version
+      run: echo "::set-env name=PACKAGE_VERSION::$PACKAGE_PREFIX.$GITHUB_RUN_NUMBER"
+    
+    - name: Make package directories
+      run: mkdir -p ./packagesoutput/          
+    
+    - name: Install Octopus CLI
+      run: |
+        sudo apt update && sudo apt install --no-install-recommends gnupg curl ca-certificates apt-transport-https && \
+        curl -sSfL https://apt.octopus.com/public.key | sudo apt-key add - && \
+        sudo sh -c "echo deb https://apt.octopus.com/ stable main > /etc/apt/sources.list.d/octopus.com.list" && \
+        sudo apt update && sudo apt install octopuscli 
+
+    - name: Package and Push to Octopus
+      run: |
+        octo pack --id="CookBook" --format="Zip" --version="$PACKAGE_VERSION" --basePath="." --outFolder="./packages"
+
+        octo push --package="./packages/CookBook.$PACKAGE_VERSION.zip" --server="${{ secrets.OCTOPUS_SERVER }}" --apiKey="${{ secrets.OCTOPUS_APIKEY }}"
+
+    - name: Create and Deploy Release
+      run: octo create-release --project="$OCTOPUS_PROJECT_NAME" --packageVersion="$PACKAGE_VERSION" --releaseNumber="$PACKAGE_VERSION" --server="${{ secrets.OCTOPUS_SERVER }}" --apiKey="${{ secrets.OCTOPUS_APIKEY }}" --space="$OCTOPUS_SPACE_NAME" --deployTo="$OCTOPUS_ENVIRONMENT_NAME"
