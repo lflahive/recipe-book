@@ -51,7 +51,7 @@ function loadRecipe(id) {
 
 function loadHome() {
     $('.home').html('');
-    self.recipes.forEach(recipe => $('.home').append('<div class="home-recipe"><a href='+recipe.id+'>'+recipe.title+'</a></div>'));
+    self.recipes.forEach(recipe => $('.home').append('<a class="home-recipe" href='+recipe.id+'>'+recipe.title+'</a>'));
     $('.home').show();
 }
 
