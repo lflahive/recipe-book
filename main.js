@@ -1,10 +1,8 @@
 var recipes = [];
-var selectedRecipe = null;
 var self = this;
 
 function main() {
-    var self = this;
-    $.getJSON('./recipes.json', function(recipes) {
+    $.getJSON('./index.json', function(recipes) {
         self.recipes = recipes;
         loadRecipe(location.hash);
     });
@@ -24,17 +22,18 @@ function resetRecipe() {
 }
 
 function loadRecipe(id) {
-    this.selectedRecipe = this.recipes.filter(recipe => recipe.id == id)[0];
-    $('#title').text(this.selectedRecipe.title);
-    
-    this.selectedRecipe.ingredients.forEach(ingredient => {
-        $('#ingredients').append('<li>' + ingredient + '</li>');
-    });
+    console.log(id);
+    var recipe = self.recipes.filter(recipe => recipe.id == id)[0];
 
-    this.selectedRecipe.instructions.forEach(instruction => {
-        $('#instructions').append('<li>' + instruction + '</li>');
+    $.getJSON('./recipes/' + recipe.file, function(recipe) {
+        $('#title').text(recipe.title);
+        recipe.ingredients.forEach(ingredient => {
+            $('#ingredients').append('<li>' + ingredient + '</li>');
+        });
+        recipe.instructions.forEach(instruction => {
+            $('#instructions').append('<li>' + instruction + '</li>');
+        });
     });
-
 }
 
 $('#search').keyup(function() {
